@@ -89,12 +89,15 @@ function handleNoClick() {
             gifContainer.remove();
         }
 
-        // update NO counter msg
-        counterElement.innerHTML = `Nei clicks: ${noClickCount}<br><small>Þú getur ekki sagt "Nei" lengur! 😏</small>`;
+        // Update counter with final message
+        updateNoCounter(true);
         return; // exit early
     }
 
+    // NORMAL flow
+
     noClickCount++;
+    updateNoCounter();
 
     // Update NO button text
     noButton.textContent = messages[messageIndex];
@@ -102,8 +105,6 @@ function handleNoClick() {
     // increase YES button size
     const currentSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
     yesButton.style.fontSize = `${currentSize * 1.5}px`;
-
-    updateNoCounter();
 
     // Check if we just showed the last message
     if (messageIndex === totalMessages - 1) {
@@ -113,12 +114,19 @@ function handleNoClick() {
     messageIndex = (messageIndex + 1) % totalMessages;
 }
 
-async function updateNoCounter() {
+function updateNoCounter(isFinal = false) {
     const counterElement = document.getElementById('no-counter') || createCounterElement();
     counterElement.style.display = 'block';  // show the counter
-    counterElement.textContent = `Nei clicks: ${noClickCount}`;
+
+    if (isFinal) {
+        counterElement.textContent = `HEHE 👹 Þú getur ekki sagt "Nei" lengur!`;
+    } else {
+        counterElement.textContent = `Nei clicks: ${noClickCount}`;
+    }
+
+    // start animation
     counterElement.classList.add('update-animation');
-    // Remove animation class after animation completes
+    // remove animation class after x duration
     setTimeout(() => {
     counterElement.classList.remove('update-animation');
     }, 500);
@@ -129,7 +137,7 @@ function handleYesClick() {
     window.location.href = "yes_page.html";
 }
 
-// NO tracker
+// the NO tracker
 function createCounterElement() {
     const counter = document.createElement('div');
     counter.id = 'no-counter';
