@@ -21,6 +21,7 @@
         console.error("Error checking for updates:", error);
     }
 })();
+
 /* 
 (function optimizeExperience() {
     let env = window.location.hostname;
@@ -70,28 +71,53 @@ const messages = [
 
 let messageIndex = 0;
 let noClickCount = 0;
+const totalMessages = messages.length;
+let showedAllMessages = false;
 
 
 function handleNoClick() {
-    noClickCount++;
-
     const noButton = document.querySelector('.no-button');
     const yesButton = document.querySelector('.yes-button');
+    const gifContainer = document.querySelector('.gif_container');
+
+    if (showedAllMessages) {
+        // remove NO button
+        noButton.remove();
+
+        // remove GIF image
+        if (gifContainer) {
+            gifContainer.remove();
+        }
+
+        // update NO counter msg
+        counterElement.innerHTML = `Nei clicks: ${noClickCount}<br><small>Þú getur ekki sagt "Nei" lengur! 😏</small>`;
+        return; // exit early
+    }
+
+    noClickCount++;
 
     // Update NO button text
     noButton.textContent = messages[messageIndex];
-    messageIndex = (messageIndex + 1) % messages.length;
 
     // increase YES button size
     const currentSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
     yesButton.style.fontSize = `${currentSize * 1.5}px`;
 
-    // Show counter on page
+    updateNoCounter();
+
+    // Check if we just showed the last message
+    if (messageIndex === totalMessages - 1) {
+        showedAllMessages = true;
+    }
+    // Move to next message
+    messageIndex = (messageIndex + 1) % totalMessages;
+}
+
+async function updateNoCounter() {
     const counterElement = document.getElementById('no-counter') || createCounterElement();
     counterElement.style.display = 'block';  // show the counter
     counterElement.textContent = `Nei clicks: ${noClickCount}`;
     counterElement.classList.add('update-animation');
-
     // Remove animation class after animation completes
     setTimeout(() => {
     counterElement.classList.remove('update-animation');
