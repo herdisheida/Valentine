@@ -53,30 +53,60 @@
     }
 })();
 */
+
+// Interactive Button Logic
 const messages = [
-    "Are you sure?",
-    "Really sure??",
-    "Are you positive?",
+    "Ertu viss?",
+    "100% viss?",
+    "Fullviss??",
     "Pookie please...",
-    "Just think about it!",
-    "If you say no, I will be really sad...",
-    "I will be very sad...",
-    "I will be very very very sad...",
-    "Ok fine, I will stop asking...",
-    "Just kidding, say yes please! ❤️"
+    "Hugsaðu aðeins um það!",
+    "Ef þú segir nei þá verð ég mjög leið...",
+    "Mjög leið...",
+    "Mjög mjög mjög leiðd...",
+    "ok :( ég skal hætta að spyrja...",
+    "Djk segðu já plís! ❤️"
 ];
 
 let messageIndex = 0;
+let noClickCount = 0;
+
 
 function handleNoClick() {
+    noClickCount++;
+
     const noButton = document.querySelector('.no-button');
     const yesButton = document.querySelector('.yes-button');
+
+    // Update NO button text
     noButton.textContent = messages[messageIndex];
     messageIndex = (messageIndex + 1) % messages.length;
+
+    // increase YES button size
     const currentSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
     yesButton.style.fontSize = `${currentSize * 1.5}px`;
+
+    // Show counter on page
+    const counterElement = document.getElementById('no-counter') || createCounterElement();
+    counterElement.style.display = 'block';  // show the counter
+    counterElement.textContent = `Nei clicks: ${noClickCount}`;
+    counterElement.classList.add('update-animation');
+
+    // Remove animation class after animation completes
+    setTimeout(() => {
+    counterElement.classList.remove('update-animation');
+    }, 500);
 }
 
 function handleYesClick() {
+    localStorage.setItem('valentineNoClicks', noClickCount);
     window.location.href = "yes_page.html";
+}
+
+// NO tracker
+function createCounterElement() {
+    const counter = document.createElement('div');
+    counter.id = 'no-counter';
+    document.body.appendChild(counter);
+    return counter;
 }
