@@ -4,7 +4,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f9e3e3;
+    background-color: #eee3f9;
     font-family: 'Arial', sans-serif;
 }
 
@@ -22,3 +22,8 @@ body {
     max-width: 500px; 
     height: auto; 
 }
+
+.gif_container .yes-gif {
+  border: solid #301c57 0.5rem;
+}
+
