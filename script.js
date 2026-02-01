@@ -121,10 +121,11 @@ function handleNoClick() {
         updateNoCounter(true);    // shows HEHE message
 
         // disable NO button
-        noButton.disabled = true;
-        noButton.style.opacity = "0.6";
-        noButton.style.cursor = "not-allowed";
-        // optional: noButton.remove();
+        // noButton.disabled = true;
+        // noButton.style.opacity = "0.6";
+        // noButton.style.cursor = "not-allowed";
+
+        noButton.remove();
     return;
     }
 
