@@ -104,50 +104,40 @@ const messages = [
 let messageIndex = 0;
 let noClickCount = 0;
 const totalMessages = messages.length;
-let showedAllMessages = false;
-
+const FINAL_STAGE_MIN = 11; // your last gif stage
 
 
 
 function handleNoClick() {
     const noButton = document.querySelector('.no-button');
     const yesButton = document.querySelector('.yes-button');
-    const gifContainer = document.querySelector('.gif_container');
 
-    if (showedAllMessages) {
-        // remove NO button
-        noButton.remove();
+    // increment first
+    noClickCount++;
 
-        // remove GIF image
-        if (gifContainer) {
-            gifContainer.remove();
-        }
+    // If we've reached final stage, show final gif + final message and disable NO
+    if (noClickCount >= FINAL_STAGE_MIN) {
+        updateStatusGif();        // will pick min: 11 gif
+        updateNoCounter(true);    // shows HEHE message
 
-        // Update counter with final message
-        updateNoCounter(true);
-        return; // exit early
+        // disable NO button
+        noButton.disabled = true;
+        noButton.style.opacity = "0.6";
+        noButton.style.cursor = "not-allowed";
+        // optional: noButton.remove();
+    return;
     }
 
-    // NORMAL flow
-
-    noClickCount++;
+    // normal flow
     updateNoCounter();
 
-    // Update NO button text
     noButton.textContent = messages[messageIndex];
 
     updateStatusGif();
 
-
-    // increase YES button size
     const currentSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
     yesButton.style.fontSize = `${currentSize * 1.5}px`;
 
-    // Check if we just showed the last message
-    if (messageIndex === totalMessages - 1) {
-        showedAllMessages = true;
-    }
-    // Move to next message
     messageIndex = (messageIndex + 1) % totalMessages;
 }
 
