@@ -1,9 +1,12 @@
 // cat status gifs
 const gifStages = [
     { min: 0,  src: "gifs/cat-snuggle.gif" },
-    { min: 2,  src: "gifs/cat-side-eye.gif" },
-    { min: 4,  src: "gifs/cat-glare.gif" },
-    { min: 7,  src: "gifs/cat-brick.gif" },
+    { min: 4,  src: "gifs/mad-mat-cat.gif" },
+    { min: 6,  src: "gifs/cat-glare.gif" },
+    // { min: 7,  src: "gifs/cat-side-eye.gif" },
+    { min: 7,  src: "gifs/sad-cat.gif" },
+    { min: 9,  src: "gifs/cat-hmph.gif" },
+    { min: 10,  src: "gifs/cat-brick.gif" },
     { min: 11, src: "gifs/cat-with-gun.gif" },
 ];
 
@@ -91,8 +94,8 @@ const messages = [
     "Fullviss??",
     "Pookie please...",
     "Hugsaðu aðeins um það!",
-    "Ef þú segir nei þá verð ég mjög leið...",
-    "Mjög leið...",
+    "Ef þú segir nei þá verð ég mjög reið...",
+    "og leið...",
     "Mjög mjög mjög leiðd...",
     "ok :( ég skal hætta að spyrja...",
     "Djk segðu já plís! ❤️"
