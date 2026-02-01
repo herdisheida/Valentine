@@ -1,3 +1,25 @@
+// cat status gifs
+const gifStages = [
+    { min: 0,  src: "gifs/cat-snuggle.gif" },
+    { min: 2,  src: "gifs/cat-side-eye.gif" },
+    { min: 4,  src: "gifs/cat-glare.gif" },
+    { min: 7,  src: "gifs/cat-brick.gif" },
+    { min: 11, src: "gifs/cat-with-gun.gif" },
+];
+
+
+function preloadGifs(stages) {
+  const cache = new Map();
+  stages.forEach(({ src }) => {
+    const img = new Image();
+    img.src = src;
+    cache.set(src, img);
+  });
+  return cache;
+}
+const gifCache = preloadGifs(gifStages);
+
+
 document.addEventListener('DOMContentLoaded', function() {
     updateStatusGif();
 
@@ -82,23 +104,6 @@ const totalMessages = messages.length;
 let showedAllMessages = false;
 
 
-// cat status gifs
-const gifStages = [
-    // default
-    { min: 0,  src: "https://tenor.com/view/kitty-kitten-kittens-cat-cats-gif-23725952.gif" },
-    
-    // side eye
-    { min: 2,  src: "https://tenor.com/view/amma-cat-ts-js-pmo-icl-pmo-cat-gif-9038313483801766180.gif" },
-    
-    // glare
-    { min: 4,  src: "https://tenor.com/view/tức-giận-gif-7420873232229821020.gif" },
-
-    // brick throw
-    { min: 6,  src: "https://tenor.com/view/brick-cat-cat-throwing-brick-gif-16807810806930405877.gif" },
-    
-    { min: 8, src: "https://tenor.com/view/cat-gun-cat-with-gun-wizard-cat-wizard-cat-with-gun-gif-16159015422731305199.gif" },
-];
-
 
 
 function handleNoClick() {
@@ -124,10 +129,12 @@ function handleNoClick() {
 
     noClickCount++;
     updateNoCounter();
-    updateStatusGif();
 
     // Update NO button text
     noButton.textContent = messages[messageIndex];
+
+    updateStatusGif();
+
 
     // increase YES button size
     const currentSize = parseFloat(window.getComputedStyle(yesButton).fontSize);
@@ -172,26 +179,33 @@ function createCounterElement() {
     return counter;
 }
 
+
+/* changing gifs on the index.html */
 function updateStatusGif() {
-    const img = document.querySelector("img.status-gif");
+  const imgEl = document.querySelector("img.status-gif");
+  if (!imgEl) return;
 
-    img.onerror = () => {
-        console.warn("GIF failed to load:", img.src);
-    };
+  let chosen = gifStages[0].src;
+  for (const stage of gifStages) {
+    if (noClickCount >= stage.min) chosen = stage.src;
+    else break;
+  }
 
-    console.log(img)
-    if (!img) return;
+  if (imgEl.dataset.currentSrc === chosen) return;
 
-    let chosen = gifStages[0].src; // default
+  // If preloaded, swap immediately
+  const preloaded = gifCache?.get(chosen);
+  if (preloaded && preloaded.complete) {
+    imgEl.src = chosen;
+    imgEl.dataset.currentSrc = chosen;
+    return;
+  }
 
-    for (const stage of gifStages) {
-        if (noClickCount >= stage.min) chosen = stage.src;
-        else break;
-    }
-
-    // prevent unnecessary reloads
-    if (img.dataset.currentSrc === chosen) return;
-
-    img.src = chosen;
-    img.dataset.currentSrc = chosen;
+  // If not loaded yet, swap as soon as it's ready
+  const tmp = new Image();
+  tmp.onload = () => {
+    imgEl.src = chosen;
+    imgEl.dataset.currentSrc = chosen;
+  };
+  tmp.src = chosen;
 }
