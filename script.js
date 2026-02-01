@@ -1,3 +1,10 @@
+document.addEventListener('DOMContentLoaded', function() {
+    updateStatusGif();
+
+    console.log('DOM fully loaded and parsed');
+});
+
+
 (async function checkForUpdates() {
     const currentVersion = "1.0";
     const versionUrl = "https://raw.githubusercontent.com/ivysone/Will-you-be-my-Valentine-/main/version.json"; 
@@ -75,6 +82,25 @@ const totalMessages = messages.length;
 let showedAllMessages = false;
 
 
+// cat status gifs
+const gifStages = [
+    // default
+    { min: 0,  src: "https://tenor.com/view/kitty-kitten-kittens-cat-cats-gif-23725952.gif" },
+    
+    // side eye
+    { min: 2,  src: "https://tenor.com/view/amma-cat-ts-js-pmo-icl-pmo-cat-gif-9038313483801766180.gif" },
+    
+    // glare
+    { min: 4,  src: "https://tenor.com/view/tức-giận-gif-7420873232229821020.gif" },
+
+    // brick throw
+    { min: 6,  src: "https://tenor.com/view/brick-cat-cat-throwing-brick-gif-16807810806930405877.gif" },
+    
+    { min: 8, src: "https://tenor.com/view/cat-gun-cat-with-gun-wizard-cat-wizard-cat-with-gun-gif-16159015422731305199.gif" },
+];
+
+
+
 function handleNoClick() {
     const noButton = document.querySelector('.no-button');
     const yesButton = document.querySelector('.yes-button');
@@ -98,6 +124,7 @@ function handleNoClick() {
 
     noClickCount++;
     updateNoCounter();
+    updateStatusGif();
 
     // Update NO button text
     noButton.textContent = messages[messageIndex];
@@ -143,4 +170,28 @@ function createCounterElement() {
     counter.id = 'no-counter';
     document.body.appendChild(counter);
     return counter;
+}
+
+function updateStatusGif() {
+    const img = document.querySelector("img.status-gif");
+
+    img.onerror = () => {
+        console.warn("GIF failed to load:", img.src);
+    };
+
+    console.log(img)
+    if (!img) return;
+
+    let chosen = gifStages[0].src; // default
+
+    for (const stage of gifStages) {
+        if (noClickCount >= stage.min) chosen = stage.src;
+        else break;
+    }
+
+    // prevent unnecessary reloads
+    if (img.dataset.currentSrc === chosen) return;
+
+    img.src = chosen;
+    img.dataset.currentSrc = chosen;
 }
